@@ -1,22 +1,15 @@
-from Menu import *
-from CoffeeMaker import *
-from MoneyMachine import *
+from question_model import Question
+from quiz_brain import QuizBrain
+from data import question_data
 
-mm = MoneyMachine()
-cm = CoffeeMaker()
-menu = Menu()
+question_bank = []
 
-on = True
+for item in question_data:
+    question_text = item["question"]
+    question_answer = item["correct_answer"]
+    new_q = Question(question_text, question_answer)
+    question_bank.append(new_q)
 
-while on:
-    options = menu.get_items()
-    choice = input(f"What would you like? ({options})")
-    if choice == "off":
-        on = False
-    elif choice == "report":
-        mm.report()
-        cm.report()
-    else:
-        drink = menu.find_drink(choice)
-        if cm.is_resource_sufficient(drink) and mm.make_payment(drink.cost):
-            cm.make_coffee(drink)
+quiz = QuizBrain(question_bank)
+while quiz.still_has_questions():
+    quiz.next_question()
